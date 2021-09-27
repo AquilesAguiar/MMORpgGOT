@@ -1,20 +1,13 @@
-let mongodb = require('mongodb').MongoClient
-const assert = require('assert')
+const { MongoClient } = require("mongodb");
 
-var connMongoDb = ()=>{
-    const url = 'mongodb://localhost:27017'
-    const dbName = 'got'
-    var conn = mongodb.connect(url, function(err, client) {
-        assert.equal(null, err);
-        console.log("Connected successfully to server");
-       
-        const db = client.db(dbName);
-       
-        client.close();
-    }); 
-    return conn
+const uri = 'mongodb://localhost:27017'
+const client = new MongoClient(uri);
+async function conn(){
+    await client.connect();
+    return client.db("got").createCollection("souvenirs", {
+        collation: { locale: "fr_CA" },
+      });
 }
-
-module.exports = ()=>{
-    return connMongoDb
+module.exports = function(){
+   return conn
 }
